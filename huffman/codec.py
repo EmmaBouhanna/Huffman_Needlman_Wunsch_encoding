@@ -5,7 +5,7 @@ from itertools import product
 class TreeBuilder:
     '''classe capable de construire un arbre binaire à partir d'une chaine de caractère'''
 
-    def __init__(self, text):
+    def __init__(self, text: str):
         self.texte = text
         self.occur = {}  # dictionnaire des poids de chaque caractère
         for x in self.texte:
