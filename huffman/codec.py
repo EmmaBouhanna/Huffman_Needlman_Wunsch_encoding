@@ -48,12 +48,13 @@ class TreeBuilder:
         while len(self.occur) >= 2:
             liste += [self.trouvelespluspetits()]
         for i in range(1, len(liste)):
-            for x in liste[i][1].values(): # on regarde les values de chaque dictionnaire petit
+            # on regarde les values de chaque dictionnaire petit
+            for x in liste[i][1].values():
                 for (y, z) in product(liste, liste[i][1]):
-                    if y[0] == x and liste[i][1][z] == x: # liste[i][1][z] est une valeur de petit
+                    if y[0] == x and liste[i][1][z] == x:  # liste[i][1][z] est une valeur de petit
                         # on remplace la chaine de caractère par le dictionnaire avec les clés binaires qui lui correspond
                         liste[i][1][z] = y[1]
-        return(liste[-1][1]) 
+        return(liste[-1][1])
         # le dernier élément de la liste sera mis à jour avec tous les dictionnaires au lieu des chaines de caractère
 
 

@@ -16,7 +16,7 @@ def red_text(text):
 
 
 class Ruler:
-    
+
     def __init__(self, chaine1: str, chaine2: str, dist=1, sub=1):
         # on peut modifier le cout des insertions et des délétions (d) et des substitutions (s)
         # par défaut on place ce coût à 1
@@ -52,11 +52,11 @@ class Ruler:
             self.M[i, j] = min(self.M[i-1, j] + self.d, self.M[i, j-1] +
                                self.d, self.M[i-1, j-1] + self.similitude(i, j))
         self.distance = self.M[len(self.chaine2), len(self.chaine1)]
-   
+
         # distance min que l'on peut obtenir en alignant toute la chaine1 avec la chaine2
-      
 
     # on va parcourir M en partant de M[m,n] et on va remonter pour savoir quel alignement donne une distance minimale
+
     def report(self):
         top = ''
         bottom = ''
@@ -93,6 +93,8 @@ class Ruler:
                 bottom2 += y
 
         return(top2, bottom2)
+
+
 '''
 ruler = Ruler("ACTG", "CG")
 
