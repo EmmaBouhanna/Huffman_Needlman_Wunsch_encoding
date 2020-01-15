@@ -15,7 +15,10 @@ class TreeBuilder:
                 self.occur[x] = 1
         # self.occur comporte initialement le nombre d'occurences de chaque caractère
 
-    def trouvelespluspetits(self): # au lieu de créer une classe Node, on crée un dictionnaire
+    ''' Au lieu de créer une classe Node, j'ai créé des tupples pour garder en mémoire le parent 
+    et le dictionnaire binaire contenant les enfants'''
+    
+    def trouvelespluspetits(self):
         '''cherche les deux caractères avec les plus petits coefficients et construit leur parent (fusion des deux et ajout de leur poids)'''
         petit = {}
         # petit sera un dictionnaire de forme {'0' : 'str de plus petit coeff 1' , '1' : 'str de plus petit coeff 2'}
