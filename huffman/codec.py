@@ -2,6 +2,35 @@
 from itertools import product
 
 
+class Node:
+    ''' Cette classe construit le noeud correspondant à l'ancêtre des deux occurences avec le plus petit poids'''
+    def __init__(self, occurence:dict):
+        self.parent = ['',0]
+        # chaine de caractère correspondant au parent et poids correspondant
+        self.enfants = {}
+        self.dictionnaire = occurence
+    
+    def construction_du_noeud(self):
+        a = min(self.dictionnaire.values())
+        for key in self.dictionnaire :
+            if self.dictionnaire[key] == a:
+                self.enfants['0'] = key
+                self.parent[0] += key
+                self.parent[1] += a
+                del(self.dictionnaire[key]) # on enlève le caractère du dictionnaire des occurences
+                break
+        b = min(self.dictionnaire.values())
+        for key2 in self.dictionnaire :
+            if self.dictionnaire[key2] == b:
+                self.enfants['1'] = key2
+                self.parent[0] += key2
+                self.parent[1] += b
+                del self.dictionnaire[key2]
+                break
+        self.dictionnaire[self.parent[0]] = self.parent[1] # apparition du nouveau caractère issu de la fusion des deux précédents.
+        
+
+
 class TreeBuilder:
     '''classe capable de construire un arbre binaire à partir d'une chaine de caractère'''
 
@@ -14,51 +43,25 @@ class TreeBuilder:
             else:
                 self.occur[x] = 1
         # self.occur comporte initialement le nombre d'occurences de chaque caractère
-
-    ''' Au lieu de créer une classe Node, j'ai créé des tupples pour garder en mémoire le parent 
-    et le dictionnaire binaire contenant les enfants'''
     
-    def trouvelespluspetits(self):
-        '''cherche les deux caractères avec les plus petits coefficients et construit leur parent (fusion des deux et ajout de leur poids)'''
-        petit = {}
-        # petit sera un dictionnaire de forme {'0' : 'str de plus petit coeff 1' , '1' : 'str de plus petit coeff 2'}
-        poidsparent = 0
-        a = min(self.occur.values())
-        for key in self.occur:
-            if self.occur[key] == a:
-                petit['0'] = key
-                poidsparent += a
-                del self.occur[key]
-                break
-
-        b = min(self.occur.values())
-        for key2 in self.occur:
-            if self.occur[key2] == b:
-                petit['1'] = key2
-                poidsparent += b
-                del self.occur[key2]
-                break
-        parent = petit['0']+petit['1']
-        # apparition d'un nouveau caractère dans self.occur résultant de la fusion des deux précédents.
-        self.occur[parent] = poidsparent
-        # un tupple pour garder en mémoire le parents des deux plus petits
-        return ((parent, petit))
-
+    
     def tree(self):
         '''construit l'arbre binaire à partir du texte'''
         liste = []
         # on construit une liste de tuples contenant à chaque fois : le parent et le dictionnaire contenant des clés binaires avec comme valeur les chaines de caractères correspondant
         while len(self.occur) >= 2:
-            liste += [self.trouvelespluspetits()]
+            noeud = Node(self.occur)
+            noeud.construction_du_noeud()
+            liste += [(noeud.parent[0],noeud.enfants)]
         for i in range(1, len(liste)):
-            # on regarde les values de chaque dictionnaire petit
+            # on regarde les values de chaque dictionnaire des enfants
             for x in liste[i][1].values():
                 for (y, z) in product(liste, liste[i][1]):
-                    if y[0] == x and liste[i][1][z] == x:  # liste[i][1][z] est une valeur de petit
-                        # on remplace la chaine de caractère par le dictionnaire avec les clés binaires qui lui correspond
+                    if y[0] == x and liste[i][1][z] == x:  # liste[i][1][z] est une valeur du dictionnaire des enfants
+                        # on remplace la chaine de caractère par le dictionnaire des enfants avec les clés binaires qui lui correspond
                         liste[i][1][z] = y[1]
         return(liste[-1][1])
-        # le dernier élément de la liste sera mis à jour avec tous les dictionnaires au lieu des chaines de caractère
+        # le dernier élément de la liste sera mis à jour avec tous les dictionnaires au lieu des chaines de caractères.
 
 
 class Codec:
