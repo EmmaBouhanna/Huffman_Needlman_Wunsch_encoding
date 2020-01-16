@@ -4,31 +4,33 @@ from itertools import product
 
 class Node:
     ''' Cette classe construit le noeud correspondant à l'ancêtre des deux occurences avec le plus petit poids'''
-    def __init__(self, occurence:dict):
-        self.parent = ['',0]
+
+    def __init__(self, occurence: dict):
+        self.parent = ['', 0]
         # chaine de caractère correspondant au parent et poids correspondant
         self.enfants = {}
         self.dictionnaire = occurence
-    
+
     def construction_du_noeud(self):
         a = min(self.dictionnaire.values())
-        for key in self.dictionnaire :
+        for key in self.dictionnaire:
             if self.dictionnaire[key] == a:
                 self.enfants['0'] = key
                 self.parent[0] += key
                 self.parent[1] += a
-                del(self.dictionnaire[key]) # on enlève le caractère du dictionnaire des occurences
+                # on enlève le caractère du dictionnaire des occurences
+                del(self.dictionnaire[key])
                 break
         b = min(self.dictionnaire.values())
-        for key2 in self.dictionnaire :
+        for key2 in self.dictionnaire:
             if self.dictionnaire[key2] == b:
                 self.enfants['1'] = key2
                 self.parent[0] += key2
                 self.parent[1] += b
                 del self.dictionnaire[key2]
                 break
-        self.dictionnaire[self.parent[0]] = self.parent[1] # apparition du nouveau caractère issu de la fusion des deux précédents.
-        
+        # apparition du nouveau caractère issu de la fusion des deux précédents.
+        self.dictionnaire[self.parent[0]] = self.parent[1]
 
 
 class TreeBuilder:
@@ -43,8 +45,7 @@ class TreeBuilder:
             else:
                 self.occur[x] = 1
         # self.occur comporte initialement le nombre d'occurences de chaque caractère
-    
-    
+
     def tree(self):
         '''construit l'arbre binaire à partir du texte'''
         liste = []
@@ -52,12 +53,13 @@ class TreeBuilder:
         while len(self.occur) >= 2:
             noeud = Node(self.occur)
             noeud.construction_du_noeud()
-            liste += [(noeud.parent[0],noeud.enfants)]
+            liste += [(noeud.parent[0], noeud.enfants)]
         for i in range(1, len(liste)):
             # on regarde les values de chaque dictionnaire des enfants
             for x in liste[i][1].values():
                 for (y, z) in product(liste, liste[i][1]):
-                    if y[0] == x and liste[i][1][z] == x:  # liste[i][1][z] est une valeur du dictionnaire des enfants
+                    # liste[i][1][z] est une valeur du dictionnaire des enfants
+                    if y[0] == x and liste[i][1][z] == x:
                         # on remplace la chaine de caractère par le dictionnaire des enfants avec les clés binaires qui lui correspond
                         liste[i][1][z] = y[1]
         return(liste[-1][1])
